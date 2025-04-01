@@ -3,8 +3,11 @@ import oracledb
 import json
 import os
 import yfinance as yf
+from utils.api_utils import get_actual_currency_rate
 from datetime import datetime
 
+import sys
+print(sys.path)
 
 with open(os.path.join(os.path.dirname(__file__), '..', 'config', 'config.json')) as f:
     config = json.load(f)
@@ -32,18 +35,30 @@ def home():
 def investors():
     with get_connection() as conn:
         cursor = conn.cursor()
-        cursor.execute("SELECT * FROM Investor")
+        cursor.execute("SELECT INVESTOR_ID, CLIENT_CODE, NAME, EMAIL, PHONE, NATIONAL_ID, CREATED_AT  FROM Investor")
         investors = cursor.fetchall()
     return render_template("investors.html", investors=investors)
+
+
+
 @app.route("/companies")
-def index():
+def companies():
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT company_id, name, ticker, sector, country, website FROM Company")
         companies = cursor.fetchall()
     return render_template("companies.html", companies=companies)
 
-@app.route("/add", methods=["GET", "POST"])
+#@app.route("/investors/add", methods=["GET", "POST"])
+
+@app.route("/stock-prices")
+def stock_price():
+    with get_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT company_name, ticker, trade_date, open_price, close_price, close_price_pln, low_price, high_price,volume FROM V_STOCK_PRICES_LATEST")
+        stock_prices = cursor.fetchall()
+    return render_template("stock_prices.html", stock_prices=stock_prices)
+@app.route("/add-company", methods=["GET", "POST"])
 def add_company():
     if request.method == "POST":
         try:
@@ -52,6 +67,19 @@ def add_company():
             sector = request.form['sector']
             country = request.form['country']
             website = request.form['website']
+
+            # Sprawdzenie dostępności tickera w yfinance
+            try:
+                data = yf.Ticker(ticker)
+                hist = data.history(period="1d")
+
+                if hist.empty:
+                    flash(f"❌ Brak danych historycznych dla tickera '{ticker}' w yfinance!", "danger")
+                    return redirect(url_for("add_company"))
+
+            except Exception as e:
+                flash(f"❌ Nie można połączyć się z yfinance lub ticker jest nieprawidłowy ({e})", "danger")
+                return redirect(url_for("add_company"))
 
             with get_connection() as conn:
                 cursor = conn.cursor()
@@ -124,12 +152,21 @@ def transaction():
 
 
 
-@app.route("/import_stock_prices")
+@app.route("/import-stock-prices")
 def import_stock_prices():
     with get_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT company_id, ticker FROM Company")
         companies = cursor.fetchall()
+
+        # Pobierz aktualny kurs USD/PLN
+
+        usd_to_pln = get_actual_currency_rate("USD")
+        if usd_to_pln is None:
+            flash("❌ Nie udało się pobrać kursu USD/PLN", "danger")
+            return redirect(url_for("home"))
+
+        print(f"Kurs USD/PLN: {usd_to_pln}")
 
         for company_id, ticker in companies:
             try:
@@ -137,19 +174,24 @@ def import_stock_prices():
                 hist = data.history(period="5d")
 
                 for date, row in hist.iterrows():
+                    close_usd = float(row['Close'])
+                    close_pln = round(close_usd * usd_to_pln, 2)
+
                     cursor.execute("""
                         INSERT INTO StockPrice (
                             company_id, trade_date, open_price, high_price,
                             low_price, close_price, volume, currency, close_price_pln, source
-                        ) VALUES (:1, :2, :3, :4, :5, :6, :7, 'USD', NULL, 'yfinance')""", [
-                        company_id,
-                        date.to_pydatetime(),
-                        float(row['Open']),
-                        float(row['High']),
-                        float(row['Low']),
-                        float(row['Close']),
-                        int(row['Volume'])
-                    ])
+                        ) VALUES (:1, :2, :3, :4, :5, :6, :7, 'USD', :8, 'yfinance')""",
+                        [
+                                    company_id,
+                                    date.to_pydatetime(),
+                                    float(row['Open']),
+                                    float(row['High']),
+                                    float(row['Low']),
+                                    close_usd,
+                                    int(row['Volume']),
+                                    close_pln
+                                    ])
 
                 conn.commit()
                 print(f"✅ Dodano dane notowań dla: {ticker}")

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Ceny akcji</title>
+</head>
+<body>
+    <h1>📋 Ceny akcji</h1>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Firma</th>
+            <th>Ticker</th>
+            <th>Data</th>
+            <th>Cena otwarcia</th>
+            <th>Cena zamknięcia</th>
+            <th>Cena zamknięcia w PLN</th>
+            <th>Najniższa wartość</th>
+            <th>Najwyższa wartość</th>
+            <th>Wolumen</th>
+        </tr>
+        {% for sp in stock_prices %}
+        <tr>
+            <td>{{ sp[0] }}</td>
+            <td>{{ sp[1] }}</td>
+            <td>{{ sp[2] }}</td>
+            <td>{{ sp[3] }}</td>
+            <td>{{ sp[4] }}</td>
+            <td>{{ sp[5] }}</td>
+            <td>{{ sp[6] }}</td>
+            <td>{{ sp[7] }}</td>
+            <td>{{ sp[8] }}</td>
+
+        </tr>
+        {% endfor %}
+    </table>
+    <p><a href="{{ url_for('home') }}">🏠 Powrót do strony głównej</a></p>
+</body>
+</html>
