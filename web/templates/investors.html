@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista inwestorów</title>
+</head>
+<body>
+    <h1>📋 Lista inwestorów</h1>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Id</th>
+            <th>Kod klienta</th>
+            <th>Nazwa</th>
+            <th>E-mail</th>
+            <th>Telefon</th>
+            <th>Pesel</th>
+            <th>Utworzony</th>
+        </tr>
+        {% for i in investors %}
+        <tr>
+            <td>{{ i[0] }}</td>
+            <td>{{ i[1] }}</td>
+            <td>{{ i[2] }}</td>
+            <td>{{ i[3] }}</td>
+            <td>{{ i[4] }}</td>
+            <td>{{ i[5] }}</td>
+            <td>{{ i[6] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

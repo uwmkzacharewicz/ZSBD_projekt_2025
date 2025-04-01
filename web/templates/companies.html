@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista firm</title>
+</head>
+<body>
+    <h1>📋 Lista firm</h1>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Id</th>
+            <th>Nazwa</th>
+            <th>Ticker</th>
+            <th>Sektor</th>
+            <th>Kraj</th>
+            <th>Strona WWW</th>
+        </tr>
+        {% for c in companies %}
+        <tr>
+            <td>{{ c[0] }}</td>
+            <td>{{ c[1] }}</td>
+            <td>{{ c[2] }}</td>
+            <td>{{ c[3] }}</td>
+            <td>{{ c[4] }}</td>
+            <td><a href="{{ c[5] }}" target="_blank">{{ c[5] }}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

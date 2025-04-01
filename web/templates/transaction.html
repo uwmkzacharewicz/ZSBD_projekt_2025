@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Transakcja</title>
+    <script>
+        function resetForm() {
+            document.getElementById("transaction-form").reset();
+            document.getElementById("price-label").innerText = "";
+            document.getElementById("final-price-label").innerText = "";
+        }
+    </script>
+</head>
+<body>
+    <h1>Wykonaj transakcję</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+          <li><strong>{{ category }}:</strong> {{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" id="transaction-form">
+        <label for="investor_id">Wybierz inwestora:</label>
+        <select name="investor_id" id="investor_id" required>
+            {% for id, code, name in investors %}
+                <option value="{{ id }}" {% if request.form.investor_id == id|string %}selected{% endif %}>{{ name }} ({{ code }})</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="company_id">Wybierz spółkę:</label>
+        <select name="company_id" id="company_id" required>
+            {% for id, name, ticker in companies %}
+                <option value="{{ id }}" {% if request.form.company_id == id|string %}selected{% endif %}>{{ name }} ({{ ticker }})</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="shares">Liczba akcji:</label>
+        <input type="number" name="shares" min="1" value="{{ request.form.shares or '' }}" required><br><br>
+
+        <label for="commission">Prowizja (%):</label>
+        <input type="number" name="commission" step="0.5" value="{{ request.form.commission or 5.0 }}" required><br><br>
+
+        <label for="operation">Typ operacji:</label>
+        <select name="operation" id="operation">
+            <option value="BUY" {% if request.form.operation == 'BUY' %}selected{% endif %}>Kupno</option>
+            <option value="SELL" {% if request.form.operation == 'SELL' %}selected{% endif %}>Sprzedaż</option>
+        </select><br><br>
+
+        <button type="submit" name="get_price">Pobierz cenę</button>
+        <button type="submit" name="submit_transaction">Wykonaj transakcję</button>
+        <button type="button" onclick="resetForm()">Resetuj</button>
+    </form>
+
+    {% if price %}
+    <p id="price-label">Cena akcji: {{ price }} USD</p>
+    {% endif %}
+    {% if final_price %}
+    <p id="final-price-label">Cena z prowizją: {{ final_price }} USD</p>
+    {% endif %}
+
+    <p><a href="{{ url_for('transaction') }}">Dodaj kolejną transakcję</a></p>
+</body>
+</html>

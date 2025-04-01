@@ -1,0 +1,6 @@
+investor_code,company_ticker,operation,shares,price_per_share
+CL001,AMZN,BUY,10,3100.00
+CL002,GOOGL,BUY,5,2850.00
+CL003,META,SELL,7,355.00
+CL004,NVDA,BUY,15,800.00
+CL005,TSLA,BUY,12,1000.00

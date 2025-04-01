@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Portfel inwestora</title>
+</head>
+<body>
+    <h1>📊 Portfele inwestorów</h1>
+
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Inwestor</th>
+            <th>Kod klienta</th>
+            <th>Spółka</th>
+            <th>Ticker</th>
+            <th>Akcje</th>
+            <th>Średnia cena zakupu</th>
+        </tr>
+        {% for row in data %}
+        <tr>
+            <td>{{ row[1] }}</td> <!-- investor_name -->
+            <td>{{ row[2] }}</td> <!-- client_code -->
+            <td>{{ row[3] }}</td> <!-- company_name -->
+            <td>{{ row[4] }}</td> <!-- ticker -->
+            <td>{{ row[5] }}</td> <!-- shares -->
+            <td>{{ row[6] }} USD</td> <!-- avg_price -->
+        </tr>
+        {% endfor %}
+    </table>
+
+    <p><a href="{{ url_for('index') }}">🏠 Powrót do strony głównej</a></p>
+</body>
+</html>

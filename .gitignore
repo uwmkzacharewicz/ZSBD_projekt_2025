@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+.env
+config/config.json
+
+
+.venv/
+venv/
+
+.idea/
+
+*.db
+*.log
+*.sqlite3
+*.bak
+

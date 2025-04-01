@@ -1,0 +1,6 @@
+client_code,name,email,phone,national_id
+CL001,Jan Kowalski,jan.kowalski@sql.com,+48123456789,12345678901
+CL002,Anna Nowak,anna.nowak@sql.com,+48123456780,23456789012
+CL003,Piotr Wiśniewski,piotr.wisniewski@sql.com,+48123456781,34567890123
+CL004,Katarzyna Zielińska,katarzyna.zielinska@sql.com,+48123456782,45678901234
+CL005,Tomasz Wójcik,tomasz.wojcik@sql.com,+48123456783,56789012345
