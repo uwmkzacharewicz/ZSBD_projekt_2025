@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Import firm z CSV</title>
 </head>
 <body>
-$END$
+    <h1>📥 Import firm z pliku CSV</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+          <li><strong>{{ category }}:</strong> {{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('companies_bp.import_companies') }}" method="POST" enctype="multipart/form-data">
+        <input type="file" name="csv_file" accept=".csv" required>
+        <button type="submit">Importuj</button>
+    </form>
+
+    <p><a href="{{ url_for('home_bp.home') }}">🏠 Powrót</a></p>
 </body>
 </html>

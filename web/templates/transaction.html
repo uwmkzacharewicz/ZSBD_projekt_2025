@@ -63,7 +63,7 @@
     <p id="final-price-label">Cena z prowizją: {{ final_price }} USD</p>
     {% endif %}
 
-    <p><a href="{{ url_for('transaction') }}">Dodaj kolejną transakcję</a></p>
-    <p><a href="{{ url_for('home') }}">🏠 Powrót do strony głównej</a></p>
+    <p><a href="{{ url_for('transactions_bp.transaction') }}">Dodaj kolejną transakcję</a></p>
+    <p><a href="{{ url_for('home_bp.home') }}">🏠 Powrót do strony głównej</a></p>
 </body>
 </html>

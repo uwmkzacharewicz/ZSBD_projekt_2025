@@ -13,7 +13,6 @@ ehthumbs.db
 .env
 config/config.json
 
-
 .venv/
 venv/
 
