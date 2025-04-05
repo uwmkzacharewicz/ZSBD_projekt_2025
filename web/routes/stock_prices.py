@@ -65,3 +65,16 @@ def import_stock_prices():
     flash("✅ Import notowań zakończony", "success")
     return redirect(url_for("home_bp.home")
 )
+
+@stock_prices_bp.route("/archive", methods=["GET", "POST"])
+def archive_stock_prices():
+    try:
+        with get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.callproc("archive_old_prices")
+            conn.commit()
+        flash("✅ Archiwizacja zakończona sukcesem!", "success")
+    except Exception as e:
+        flash(f"❌ Błąd archiwizacji: {e}", "danger")
+
+    return redirect(url_for("stock_prices_bp.stock_prices"))

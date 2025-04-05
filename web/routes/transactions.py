@@ -5,7 +5,7 @@ from utils.db_utils import get_connection
 
 transactions_bp = Blueprint('transactions_bp', __name__, url_prefix="/transactions")
 
-@transactions_bp.route("/")
+@transactions_bp.route("/", methods=["GET", "POST"])
 def transaction():
     with get_connection() as conn:
         cursor = conn.cursor()

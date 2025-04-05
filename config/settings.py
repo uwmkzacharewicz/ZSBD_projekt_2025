@@ -1,7 +1,7 @@
 import os
 
 # Aktywne środowisko
-ACTIVE_ENV = "remote"  # lub "remote"
+ACTIVE_ENV = "proxmox"  # lub "remote"
 CONFIG_FILE = os.path.join(os.path.dirname(__file__), "config.json")
 
 SCHEMA_SOURCE = "local"  # "local" albo "github"
